@@ -1,0 +1,93 @@
+{
+  "info": {
+    "name": "SMARTC-7 [BF-CPT-02] Se connecter et se déconnecter",
+    "description": "Lancer `npm run seed` puis `npm start` avant d'exécuter la collection. Exécuter les requêtes DANS L'ORDRE (bouton « Run collection »). Le jeton est enregistré automatiquement dans la variable {{token}}.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. CA2 - Mot de passe incorrect",
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('401', () => pm.response.to.have.status(401));",
+        "pm.test('Message générique', () => pm.expect(pm.response.json().message).to.eql('Identifiants invalides.'));",
+        "pm.test('Pas de jeton', () => pm.expect(pm.response.json().token).to.be.undefined);"
+      ] } }],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"email\": \"yasmine@univ.tn\",\n  \"motDePasse\": \"mauvais\"\n}" },
+        "url": "{{baseUrl}}/api/auth/login"
+      }
+    },
+    {
+      "name": "2. CA2 - E-mail inconnu (même message)",
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('401', () => pm.response.to.have.status(401));",
+        "pm.test('Même message que le mot de passe faux', () => pm.expect(pm.response.json().message).to.eql('Identifiants invalides.'));"
+      ] } }],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"email\": \"inconnu@univ.tn\",\n  \"motDePasse\": \"Passw0rd!\"\n}" },
+        "url": "{{baseUrl}}/api/auth/login"
+      }
+    },
+    {
+      "name": "3. CA1 - Connexion réussie",
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('200', () => pm.response.to.have.status(200));",
+        "const body = pm.response.json();",
+        "pm.test('Jeton JWT reçu', () => pm.expect(body.token).to.be.a('string'));",
+        "pm.test('Redirection vers l\\'accueil', () => pm.expect(body.redirect).to.eql('/accueil.html'));",
+        "pm.test('Le hash du mot de passe n\\'est pas renvoyé', () => pm.expect(body.user.motDePasseHash).to.be.undefined);",
+        "pm.collectionVariables.set('token', body.token);"
+      ] } }],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"email\": \"yasmine@univ.tn\",\n  \"motDePasse\": \"Passw0rd!\"\n}" },
+        "url": "{{baseUrl}}/api/auth/login"
+      }
+    },
+    {
+      "name": "4. CA1 - Accès à une route protégée",
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('200', () => pm.response.to.have.status(200));",
+        "pm.test('Utilisateur connecté', () => pm.expect(pm.response.json().user.email).to.eql('yasmine@univ.tn'));"
+      ] } }],
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/api/auth/me"
+      }
+    },
+    {
+      "name": "5. CA3 - Déconnexion",
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('200', () => pm.response.to.have.status(200));",
+        "pm.test('Redirection vers la connexion', () => pm.expect(pm.response.json().redirect).to.eql('/login.html'));"
+      ] } }],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/api/auth/logout"
+      }
+    },
+    {
+      "name": "6. CA3 - Le jeton ne fonctionne plus",
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('401', () => pm.response.to.have.status(401));",
+        "pm.test('Renvoi vers la connexion', () => pm.expect(pm.response.json().redirect).to.eql('/login.html'));"
+      ] } }],
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/api/auth/me"
+      }
+    }
+  ]
+}

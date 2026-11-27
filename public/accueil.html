@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Accueil - SmartCampus</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; background: #f7faf7; }
+    header { background: #2e7d32; color: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    main { padding: 2rem; }
+    button { background: #fff; color: #2e7d32; border: 0; padding: .5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600; }
+  </style>
+</head>
+<!-- hidden : rien ne s'affiche tant que le serveur n'a pas validé le jeton -->
+<body hidden>
+  <header>
+    <strong>SmartCampus &amp; Green Mobility</strong>
+    <button id="btn-deconnexion">Se déconnecter</button>
+  </header>
+  <main>
+    <h1 id="bienvenue"></h1>
+    <p>Connecté avec : <span id="email"></span></p>
+  </main>
+  <script src="/js/api.js"></script>
+  <script src="/js/accueil.js"></script>
+</body>
+</html>

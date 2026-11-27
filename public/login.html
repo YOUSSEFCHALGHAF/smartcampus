@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connexion - SmartCampus</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #eef5ef; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+    .carte { background: #fff; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.08); width: 320px; }
+    h1 { color: #2e7d32; font-size: 1.4rem; margin-top: 0; }
+    label { display: block; margin-top: 1rem; font-size: .9rem; }
+    input { width: 100%; padding: .6rem; margin-top: .3rem; box-sizing: border-box; border: 1px solid #ccc; border-radius: 6px; }
+    button { width: 100%; margin-top: 1.5rem; padding: .7rem; background: #2e7d32; color: #fff; border: 0; border-radius: 6px; cursor: pointer; font-size: 1rem; }
+    button:disabled { opacity: .6; }
+    #erreur { color: #c62828; margin-top: 1rem; min-height: 1.2em; }
+  </style>
+</head>
+<body>
+  <main class="carte">
+    <h1>SmartCampus - Connexion</h1>
+    <form id="form-login">
+      <label for="email">E-mail universitaire</label>
+      <input type="email" id="email" required autocomplete="username" />
+
+      <label for="motDePasse">Mot de passe</label>
+      <input type="password" id="motDePasse" required autocomplete="current-password" />
+
+      <button type="submit" id="btn-connexion">Se connecter</button>
+      <p id="erreur" role="alert"></p>
+    </form>
+  </main>
+  <script src="/js/api.js"></script>
+  <script src="/js/login.js"></script>
+</body>
+</html>

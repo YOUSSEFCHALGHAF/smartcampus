@@ -1,0 +1,21 @@
+# Intégration continue : lance les tests à chaque push et à chaque Pull Request.
+# La Pull Request ne doit être fusionnée que si ce contrôle est vert (Definition of Done).
+name: Tests
+
+on:
+  push:
+    branches: [main, develop, 'feature/**']
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run test:coverage
